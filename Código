@@ -1,0 +1,143 @@
+#include <vector>
+#include <string>
+#include <iostream>
+#include <cstring>
+#include <fstream>
+
+using namespace std;
+
+bool verbo(string token){
+    string linea;
+    int validaciones=0;
+    ifstream archivo;
+    archivo.open("verbos.txt",ios::in);
+    if(archivo.is_open()){
+        do{
+            archivo>>linea;
+            if(token==linea){
+                return true;
+            }
+        }while(!archivo.fail());
+    }
+    else{
+        cout<<"error archivo no valido: "<<"verbos.txt"<<endl;        
+    }
+    archivo.close();
+    return false;
+}
+
+void tokenize(string const &str, vector<string> &out){
+    char *t = strtok(const_cast<char*>(str.c_str()), " ");
+    while (t != nullptr){
+        out.push_back(string(t));
+        t = strtok(nullptr, " ");
+    }
+}
+
+void Det(vector<string> &tokens){
+    cout << "Det" << endl;
+    string determinantes[]= {"el", "la", "los", "las"};
+    string token = tokens[0];
+    for(string d:determinantes){
+        if(token == d){
+            tokens.erase(tokens.begin());
+            if(!verbo(tokens[0])){
+                tokens.erase(tokens.begin());
+            }
+            break;
+        }
+    }
+}
+
+void N(vector<string> &tokens){
+    cout << "N" << endl;
+    string token = tokens[0];
+    bool v = verbo(token);
+    cout << "Palabra:"<< token << endl << "Verbo:" << v << endl<<endl;
+    if(!v){
+        tokens.erase(tokens.begin());
+    }
+}
+
+bool Enl(vector<string> &tokens){
+    cout << "Enl" << endl;
+    string token = tokens[0];
+    string values[]={"de"};
+    for(string v: values){
+        if(token == v){
+            tokens.erase(tokens.begin());
+            return true;
+        }
+    }
+    return false;
+}
+
+void SN(vector<string> &tokens){
+    cout << "SN" << endl;
+    N(tokens);
+}
+
+void SPrep(vector<string> &tokens){
+    cout << "SPrep" << endl;
+    Enl(tokens);
+    N(tokens);
+    SN(tokens);
+}
+
+void analizador_sujeto(vector<string> &tokens){
+    cout << "analizador_sujeto" << endl;
+    string token = tokens[0];
+    if(token == "el"||token=="ella"){
+        tokens.erase(tokens.begin());
+    }
+    else{
+        Det(tokens);
+        N(tokens);
+        SPrep(tokens);
+    }
+}
+
+void NP(vector<string> &tokens){
+    cout << "NP" << endl;
+    string token = tokens[0];
+    bool v = verbo(token);
+    cout << "Palabra:"<< token << endl << "Verbo:" << v << endl<<endl;
+    if(verbo(token)){
+        tokens.erase(tokens.begin());
+    }
+}
+
+void SN_CD(vector<string> &tokens){
+    cout << "SN_CD" << endl;
+    string token = tokens[0];
+    Det(tokens);
+    N(tokens);
+}
+
+void analizador_predicado(vector<string> &tokens){
+    cout << "analizador_predicado" << endl;
+    NP(tokens);
+    SN_CD(tokens);
+}
+
+int main(){
+    string input;
+    cout << "Ingrese una frase\n";
+    cin >> input;
+    vector<string> tokens;
+    tokenize(input, tokens);
+
+    analizador_sujeto(tokens);
+    analizador_predicado(tokens);
+
+    if(tokens.size() == 0){
+        cout << "El input es válido" << endl;
+    }
+    else{
+        cout << "El string no es válido" << endl;
+        for(string i: tokens){
+            cout << i << ",";
+        }
+        cout<<endl;
+    }
+}
