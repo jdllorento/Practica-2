@@ -1,0 +1,101 @@
+main.cpp
+
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <stdlib.h>
+#include "funciones1.h"
+using namespace std;
+
+Frase::~Frase(){}
+Frase::Frase(){}
+bool sujetoExiste = false;
+bool verboExiste = false;
+bool verboDoble = false;
+bool predicadoExiste = false;
+
+bool buscar_verbo(string frase){
+  
+ifstream archivo;
+archivo.open("verbos.txt", ios::in);
+  while(!verboExiste || !archivo.eof()){
+    string linea;
+    getline(archivo, linea);
+    verboExiste = (frase.find(linea) != string::npos);
+    if(verboExiste == true){
+      verboDoble = (frase.find(linea, frase.find(linea)+1));
+    }
+    }
+       return verboExiste;
+       return verboDoble;
+  }
+
+bool buscar_sujeto(string frase){
+  
+ifstream archivo;
+archivo.open("sujetos.txt", ios::in);
+  while(!sujetoExiste || !archivo.eof()){
+    string linea;
+    getline(archivo, linea);
+    sujetoExiste = (frase.find(linea) != string::npos);
+    }
+    return sujetoExiste;
+  }
+
+bool buscar_predicado(string frase){
+  
+ifstream archivo;
+archivo.open("predicados.txt", ios::in);
+  while(!predicadoExiste || !archivo.eof()){
+    string linea;
+    getline(archivo, linea);
+    sujetoExiste = (frase.find(linea) != string::npos);
+    }
+    return predicadoExiste;
+  }
+
+int main(){
+  int cont = 0;
+  while (cont >= 0){
+  cout<< "Ingrese una frase a evaluar\n";
+  string frase;
+  std::getline(cin,frase);
+  buscar_verbo(frase);
+  if(verboExiste == true){
+    if(verboDoble == true){
+      cout<<"Frase inválida\n";
+      cont = cont+1;
+    }
+    else if (verboDoble == false){
+    buscar_sujeto(frase);
+    if(sujetoExiste == true){
+      buscar_predicado(frase);
+      if(predicadoExiste == true){
+        cout<<"Frase válida\n";
+        cout<<"Ingrese otra frase";
+      }
+    }
+}
+}
+}
+}
+
+funciones.h
+
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <stdlib.h>
+using namespace std;
+
+
+
+class Frase{
+public:
+Frase();
+~Frase();
+ bool buscar_verbo();
+ bool buscar_sujeto();
+ bool buscar_predicado();
+
+};
