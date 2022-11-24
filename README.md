@@ -12,3 +12,5 @@ Para el diseño de clases tenemos:
 -Clase main.cpp: En esta clase aplicaremos <include> funciones.h para tener acceso a los métodos y listas que creamos, y de esta manera aplicarlos a la oración ingresada y determinar con condicionales si la sintaxis es correcta.
 
 Para esta práctica tomamos dos enfoques diferentes, sin embargo, no se logró que ninguno funcionara al 100%
+
+Link al video de la sustentación: https://www.youtube.com/watch?v=UeKbDn1N&t=372s
